@@ -3,85 +3,97 @@
     "contactItems": [
       {
         "type": "email",
-        "label": "hello@imsruthi.com",
+        "label": "priya.baisnift@gmail.com",
         "icon": "/images/icon/mail-icon.svg",
-        "link": "mailto:hello@imsruthi.com"
+        "link": "mailto:priya.baisnift@gmail.com"
       },
       {
         "type": "phone",
-        "label": "+901 5588 2500",
+        "label": "+91 76208 55201",
         "icon": "/images/icon/call-icon.svg",
-        "link": "tel:+90155882500"
+        "link": "tel:+917620855201"
       },
       {
-        "type": "website",
-        "label": "www.mywebsite.com",
+        "type": "Resume",
+        "label": "www.myresume.com",
         "icon": "/images/icon/web-icon.svg",
-        "link": "https://www.mywebsite.com"
+        "link": "https://drive.google.com/file/d/1c5X4s235l02tSKMqtgpVLw06b0IlDfx9/view?usp=drivesdk"
       }
     ],
     "socialItems": [
-      {
-        "platform": "dribbble",
-        "icon": "/images/icon/dribble-icon.svg",
-        "link": "https://dribbble.com"
-      },
+      
       {
         "platform": "linkedin",
-        "icon": "/images/icon/linkedin-icon.svg",
-        "link": "https://linkedin.com"
+        "icon": "/images/icon/linkedin.png",
+        "link": "https://www.linkedin.com/in/priya-bais-8b0685192/"
       },
       {
-        "platform": "facebook",
-        "icon": "/images/icon/facebook-icon.svg",
-        "link": "https://facebook.com"
+        "platform": "instagram",
+        "icon": "/images/icon/instagram.png",
+        "link": "https://www.instagram.com/pootpriya?igsh=MTNkMmJ4MXh6dzRxaw=="
+      },
+      {
+        "platform": "pinterest",
+        "icon": "/images/icon/pinterest.png",
+        "link": "https://pin.it/6gSyORV5o"
+      },
+      {
+        "platform": "behance",
+        "icon": "/images/icon/behance.png",
+        "link": "https://www.behance.net/2h4mqb6fx9a8c6"
       }
     ]
   },
   "educationData": {
     "education": [
       {
-        "title": "Lipsum Collage - 2010",
-        "description": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form Koramangala collage."
+        "title": "Creative Direction"
       },
       {
-        "title": "Master Diploma - 2012",
-        "description": "Combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable."
+        "title": "Trend Forecasting"
       },
       {
-        "title": "Master in User Experience - 2014",
-        "description": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration."
+        "title": "Tech Pack Creation"
+      },
+      {
+        "title": "Garment Construction"
+      },
+      {
+        "title": "Textile Knowledge"
+      },
+      {
+        "title": "Digital Research / Market Research"
       }
     ],
     "skills": [
       {
-        "name": "Figma",
-        "icon": "/images/home/education-skill/figma-icon.svg",
+        "name": "Endless Summer",
+        "icon": "/images/home/education-skill/endless_summer_logo.PNG",
         "rating": 5
       },
       {
-        "name": "Photoshop",
-        "icon": "/images/home/education-skill/photoshop-icon.svg",
+        "name": "Levi's",
+        "icon": "/images/home/education-skill/Levi's_logo.png",
         "rating": 5
       },
       {
-        "name": "Sketch",
-        "icon": "/images/home/education-skill/sketch-icon.svg",
+        "name": "Cottons",
+        "icon": "/images/home/education-skill/cottons_logo.jpg",
         "rating": 4
       },
       {
-        "name": "Adobe XD",
-        "icon": "/images/home/education-skill/adobe-icon.svg",
+        "name": "PDKF",
+        "icon": "/images/home/education-skill/newpdkf_logo.jpg",
         "rating": 4
       },
       {
-        "name": "Framer",
-        "icon": "/images/home/education-skill/framer-icon.svg",
+        "name": "Rkivecity",
+        "icon": "/images/home/education-skill/rcity_logo.jpeg",
         "rating": 5
       },
       {
-        "name": "Invasion",
-        "icon": "/images/home/education-skill/invision-icon.svg",
+        "name": "Vaishali",
+        "icon": "/images/home/education-skill/vaishali.svg",
         "rating": 3
       }
     ]
@@ -89,28 +101,32 @@
   "contactLinks": {
     "socialLinks": [
       {
-        "title": "Dribble",
-        "href": "/"
-      },
-      {
-        "title": "Facebook",
-        "href": "/"
-      },
-      {
         "title": "LinkedIn",
-        "href": "/"
+        "href": "/https://www.linkedin.com/in/priya-bais-8b0685192/"
+      },
+      {
+        "title": "Instagram",
+        "href": "/https://www.instagram.com/pootpriya?igsh=MTNkMmJ4MXh6dzRxaw=="
+      },
+      {
+        "title": "Pinterest",
+        "href": "/https://pin.it/6gSyORV5o"
+      },
+      {
+        "title": "Behance",
+        "href": "/https://www.behance.net/2h4mqb6fx9a8c6"
       }
     ],
     "contactInfo": [
       {
         "type": "email",
-        "label": "hello@imsruthi.com",
-        "link": "mailto:hello@imsruthi.com"
+        "label": "priya.baisnift@gmail.com",
+        "link": "mailto:priya.baisnift@gmail.com"
       },
       {
         "type": "phone",
-        "label": "+901 5588 2500",
-        "link": "tel:+90155882500"
+        "label": "+91 76208 55201",
+        "link": "tel:+917620855201"
       }
     ]
   }

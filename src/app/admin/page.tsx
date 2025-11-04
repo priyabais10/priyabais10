@@ -11,6 +11,7 @@ export default function AdminDashboard() {
     description: "",
     client: "",
     image: "",
+    project_url: "",
   });
 
   // ✅ Fetch projects
@@ -37,10 +38,10 @@ export default function AdminDashboard() {
     e.preventDefault();
 
     // Automatically generate slug from title
-    let baseSlug = formData.title
-  .toLowerCase()
-  .replace(/[^a-z0-9]+/g, "-")
-  .replace(/(^-|-$)+/g, "");
+    const baseSlug = formData.title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)+/g, "");
 
     let slug = baseSlug;
 
@@ -55,7 +56,7 @@ export default function AdminDashboard() {
     }
     const payload = { ...formData, slug };
 
-
+    
 
     const res = await fetch("/api/projects", {
       method: "POST",
@@ -64,19 +65,14 @@ export default function AdminDashboard() {
     });
 
     if (res.ok) {
-      setFormData({ title: "", description: "", client: "", image: "" });
+      setFormData({ title: "", description: "", client: "", image: "" ,project_url:"" });
       fetchProjects();
     } else {
       alert("❌ Failed to add project");
     }
   };
 
-  // ✅ Delete project
-  const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this project?")) return;
-    await fetch(`/api/projects/${id}`, { method: "DELETE" });
-    fetchProjects();
-  };
+
 
   return (
     <main className="min-h-screen bg-gray-50 p-10">
@@ -98,7 +94,7 @@ export default function AdminDashboard() {
         onSubmit={handleSubmit}
         className="bg-white shadow p-6 rounded-lg mb-10 grid grid-cols-1 md:grid-cols-2 gap-4"
       >
-        {["title", "description", "client", "image"].map((field) => (
+        {["title", "description", "client", "image", "project_url"].map((field) => (
           <input
             key={field}
             type="text"
@@ -150,12 +146,6 @@ export default function AdminDashboard() {
                   >
                     View
                   </a>
-                  <button
-                    onClick={() => handleDelete(p.id)}
-                    className="text-red-500 hover:text-red-700 text-sm"
-                  >
-                    Delete
-                  </button>
                 </div>
               </div>
             ))}

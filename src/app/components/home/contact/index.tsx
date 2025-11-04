@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 const Contact = () => {
   const [contactData, setContactData] = useState<any>(null);
+  const [socialData, setSocialData] = useState<any>(null);
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -21,43 +22,33 @@ const Contact = () => {
         if (!res.ok) throw new Error("Failed to fetch");
         const data = await res.json();
         setContactData(data?.contactLinks);
+        setSocialData(data?.contactBar?.socialItems); // ✅ Added this line
       } catch (error) {
-        console.error("Error fetching services:", error);
+        console.error("Error fetching contact data:", error);
       }
     };
 
     fetchData();
   }, []);
 
-  const reset = () => {
-    formData.name = "";
-    formData.number = "";
-    formData.email = "";
-    formData.message = "";
-  };
-
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    fetch("https://formsubmit.co/ajax/krunal.bais.100@gmail.com", {
+    fetch("https://formsubmit.co/ajax/priya.baisnift@gmail.com", {
       method: "POST",
       headers: { "Content-type": "application/json" },
-      body: JSON.stringify({
-        name: formData.name,
-        number: formData.number,
-        email: formData.email,
-        message: formData.message,
-      }),
+      body: JSON.stringify(formData),
     })
       .then((response) => response.json())
       .then((data) => {
         setSubmitted(data.success);
-        reset();
+        setFormData({ name: "", number: "", email: "", message: "" });
       })
       .catch((error) => {
         console.log(error.message);
       });
   };
+
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -72,9 +63,10 @@ const Contact = () => {
         <div className="pt-16 md:pt-32 pb-20">
           <div className="flex items-center justify-between gap-2 border-b border-black pb-7 mb-9 md:mb-16">
             <h2>Contact Me</h2>
-            {/* <p className="text-xl text-orange-500">( 05 )</p> */}
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            {/* Contact Form */}
             <form onSubmit={handleSubmit}>
               <div className="flex flex-col gap-7 sm:gap-12">
                 <div className="grid grid-cols-2 gap-8">
@@ -106,6 +98,7 @@ const Contact = () => {
                     />
                   </div>
                 </div>
+
                 <div>
                   <label htmlFor="email" className="label">
                     Email *
@@ -120,6 +113,7 @@ const Contact = () => {
                     onChange={handleChange}
                   />
                 </div>
+
                 <div>
                   <label htmlFor="message" className="label">
                     Message *
@@ -134,6 +128,7 @@ const Contact = () => {
                     rows={2}
                   />
                 </div>
+
                 {submitted && (
                   <div className="flex items-center gap-2">
                     <Image
@@ -143,51 +138,70 @@ const Contact = () => {
                       height={30}
                     />
                     <p className="text-secondary">
-                      Great!!! Email has been Successfully Sent. We will get in
-                      touch asap.
+                      Great! Email has been successfully sent. We’ll get in
+                      touch ASAP.
                     </p>
                   </div>
                 )}
+
                 <button
                   type="submit"
                   className="button relative overflow-hidden cursor-pointer w-fit py-2 sm:py-3 md:py-5 px-4 sm:px-5 md:px-7 border border-primary rounded-full group"
                 >
-                  <span className=" relative z-10 text-xl font-medium text-primary group-hover:text-white transition-colors duration-300">
+                  <span className="relative z-10 text-xl font-medium text-primary group-hover:text-white transition-colors duration-300">
                     Send Now
                   </span>
                 </button>
               </div>
             </form>
+
+            {/* Contact Info + Social Links */}
             <div className="flex flex-col sm:flex-row md:flex-col justify-between gap-5 md:gap-20 items-center md:items-end">
-              <div className="flex flex-wrap flex-row md:flex-col items-start md:items-end gap-4 md:gap-6">
-                {contactData?.socialLinks?.map((value: any, index: any) => {
-                  return (
-                    <div key={index}>
-                      <Link
-                        className="text-base sm:text-lg font-normal text-secondary hover:text-primary"
-                        onClick={(e) => e.preventDefault()}
-                        href={"#!"}
-                      >
-                        {value?.title}
-                      </Link>
-                    </div>
-                  );
-                })}
+              
+              {/* ✅ Social Links (Responsive) */}
+              <div className="flex flex-wrap justify-center md:justify-end gap-5 md:gap-6">
+                {socialData?.map((item: any, index: number) => (
+                  <Link
+                    key={index}
+                    href={item.link || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="
+                      flex flex-row md:flex-col 
+                      items-center justify-center md:items-end
+                      gap-2 text-base sm:text-lg 
+                      font-normal text-secondary 
+                      hover:text-primary transition
+                    "
+                  >
+                    <Image
+                      src={getImgPath(item.icon)}
+                      alt={item.platform}
+                      width={30}
+                      height={30}
+                      className="w-6 h-6 md:w-8 md:h-8"
+                    />
+                    <span>{item.platform}</span>
+                  </Link>
+                ))}
               </div>
+
+
+              {/* ✅ Contact Info */}
               <div className="flex flex-wrap justify-center gap-5 lg:gap-11 items-end">
-                {contactData?.contactInfo?.map((value: any, index: any) => {
-                  return (
-                    <div key={index}>
-                      <Link
-                        onClick={(e) => e.preventDefault()}
-                        href={"#!"}
-                        className="text-base lg:text-lg text-black font-normal border-b border-black pb-3 hover:text-primary hover:border-primary"
-                      >
-                        {value?.label}
-                      </Link>
-                    </div>
-                  );
-                })}
+                {contactData?.contactInfo?.map((value: any, index: any) => (
+                  <Link
+                    key={index}
+                    href={value?.link || "#"}
+                    target={
+                      value?.link?.startsWith("http") ? "_blank" : "_self"
+                    }
+                    rel="noopener noreferrer"
+                    className="text-base lg:text-lg text-black font-normal border-b border-black pb-3 hover:text-primary hover:border-primary transition"
+                  >
+                    {value?.label}
+                  </Link>
+                ))}
               </div>
             </div>
           </div>

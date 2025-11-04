@@ -63,10 +63,16 @@ const LatestWork = () => {
                         className="rounded-lg w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       <Link
-                        href={p.project_url || ""}
-                        className="absolute top-0 left-0 backdrop-blur-xs bg-primary/15 w-full h-full hidden group-hover:flex rounded-lg transition-all"
+                        href={p.project_url || "#"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute inset-0 z-10 block"
                       >
-                        <span className="flex justify-center items-center p-5 w-full">
+                        {/* Full clickable area for all devices */}
+                      </Link>
+
+                      <div className="absolute inset-0 flex justify-center items-center rounded-lg transition-all duration-300 bg-black/0 hover:bg-black/30">
+                        <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <svg
                             width="65"
                             height="64"
@@ -74,13 +80,7 @@ const LatestWork = () => {
                             fill="none"
                             xmlns="http://www.w3.org/2000/svg"
                           >
-                            <rect
-                              x="0.333374"
-                              width="64"
-                              height="64"
-                              rx="32"
-                              fill="#FE4300"
-                            />
+                            <rect x="0.333374" width="64" height="64" rx="32" fill="#FE4300" />
                             <path
                               d="M25.6667 25.3333H39M39 25.3333V38.6666M39 25.3333L25.6667 38.6666"
                               stroke="#FFF"
@@ -90,7 +90,8 @@ const LatestWork = () => {
                             />
                           </svg>
                         </span>
-                      </Link>
+                      </div>
+
                     </div>
 
                     {/* Title & Client */}
