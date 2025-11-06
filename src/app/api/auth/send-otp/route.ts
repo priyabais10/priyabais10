@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-
-let otpStore: Record<string, { otp: string; expires: number }> = {};
+import otpStore from "@/lib/otpStore"; // ✅ imported here
 
 export async function POST(req: Request) {
   try {
@@ -35,5 +34,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: false, error: error.message });
   }
 }
-
-export { otpStore };
