@@ -1,16 +1,15 @@
 "use client";
-
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-export default function AdminLoginPage() {
+export default function AdminLogin() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: any) => {
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -21,68 +20,55 @@ export default function AdminLoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
       const data = await res.json();
 
-      if (res.ok) {
-        // Redirect after successful login
-        router.push("/admin/dashboard");
-      } else {
-        setError(data.message || "Invalid credentials");
-      }
+      if (!res.ok || !data.success) throw new Error(data.error);
+
+      // Send OTP after credentials are correct
+      await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      localStorage.setItem("pendingEmail", email);
+      router.push("/admin/verify-otp");
     } catch (err: any) {
-      setError("Something went wrong. Please try again.");
+      setError(err.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Admin Login
-        </h2>
-
-        {error && (
-          <div className="bg-red-100 text-red-600 p-2 mb-4 rounded text-sm text-center">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleLogin} className="space-y-5">
-          <div>
-            <label className="block mb-1 text-gray-600 font-medium">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
-            />
-          </div>
-
-          <div>
-            <label className="block mb-1 text-gray-600 font-medium">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-orange-400"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className=" bg-orange-500 text-white font-medium py-2 rounded-md transition w-full button1"
-            style={{ }}
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
-        </form>
-      </div>
-    </div>
+    <main className="min-h-screen flex justify-center items-center bg-gray-100">
+      <form onSubmit={handleLogin} className="bg-white p-8 rounded-md shadow-md w-full max-w-sm">
+        <h1 className="text-2xl font-bold mb-5 text-center">Admin Login</h1>
+        <input
+          type="email"
+          placeholder="Admin Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="border p-3 rounded w-full mb-3"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="border p-3 rounded w-full mb-3"
+        />
+        {error && <p className="text-red-500 text-sm mb-3 text-center">{error}</p>}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-orange-500 text-white p-3 rounded hover:bg-orange-600"
+        >
+          {loading ? "Sending OTP..." : "Login"}
+        </button>
+      </form>
+    </main>
   );
 }

@@ -64,7 +64,18 @@ body {
 }
 
 
-
+/* Media query for screens wider than 1400px (or whatever your max-width is) */
+@media (min-width: 1400px) {
+  /* You could, for example, slightly increase the font size here */
+  h1 {
+    font-size: 3.5rem;
+  }
+  /* Or adjust padding around main elements */
+  section {
+    padding-top: 80px;
+    padding-bottom: 80px;
+  }
+}
 
 
 @theme {

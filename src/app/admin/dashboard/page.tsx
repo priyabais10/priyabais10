@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
+import AdminGuard from "@/components/AdminGuard";
 
 export default function AdminDashboard() {
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [projects, setProjects] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
@@ -14,49 +18,67 @@ export default function AdminDashboard() {
     project_url: "",
   });
 
+  // ✅ Check auth token
+  useEffect(() => {
+  // Wait until we are on the client
+  if (typeof window === "undefined") return;
+
+  const token = localStorage.getItem("adminToken");
+
+  if (!token) {
+    // Delay redirect slightly to allow client hydration
+    setTimeout(() => {
+      router.replace("/admin/login");
+    }, 200);
+  } else {
+    setIsAuthenticated(true);
+    fetchProjects();
+  }
+}, []);
+
   // ✅ Fetch projects
   const fetchProjects = async () => {
-    setLoading(true);
-    const res = await fetch("/api/projects");
-    const data = await res.json();
-    setProjects(data);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const res = await fetch("/api/projects");
+      const data = await res.json();
+      setProjects(data);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(() => {
-    fetchProjects();
-  }, []);
-
-  // ✅ Handle form input
+  // ✅ Handle input changes
   const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // ✅ Add new project (auto slug from title)
+  // ✅ Handle new project submission
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    // Automatically generate slug from title
+    // Auto-generate slug from title
     const baseSlug = formData.title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)+/g, "");
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "");
 
     let slug = baseSlug;
 
-    // Check if slug already exists
+    // Check for duplicate slug in Supabase
     const { data: existing } = await supabase
       .from("projects")
       .select("slug")
       .eq("slug", slug);
 
     if (existing && existing.length > 0) {
-      slug = `${baseSlug}-${existing.length + 1}`; // e.g. reebok-2
+      slug = `${baseSlug}-${existing.length + 1}`;
     }
-    const payload = { ...formData, slug };
 
-    
+    const payload = { ...formData, slug };
 
     const res = await fetch("/api/projects", {
       method: "POST",
@@ -65,24 +87,43 @@ export default function AdminDashboard() {
     });
 
     if (res.ok) {
-      setFormData({ title: "", description: "", client: "", image: "" ,project_url:"" });
+      setFormData({
+        title: "",
+        description: "",
+        client: "",
+        image: "",
+        project_url: "",
+      });
       fetchProjects();
     } else {
       alert("❌ Failed to add project");
     }
   };
 
+  // ✅ Logout
+  const handleLogout = () => {
+    localStorage.removeItem("adminToken");
+    router.push("/admin/login");
+  };
+
+  // if (!isAuthenticated) return null;
+
+  if (!isAuthenticated) {
+  return (
+    <div className="min-h-screen flex items-center justify-center text-gray-500">
+      Checking authentication...
+    </div>
+  );
+}
 
 
   return (
-    <main className="min-h-screen bg-gray-50 p-10">
+    <AdminGuard>
+        <main className="min-h-screen bg-gray-50 p-10">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold">Admin Dashboard</h1>
         <button
-          onClick={async () => {
-            await fetch("/api/auth/logout", { method: "POST" });
-            window.location.href = "/admin/login";
-          }}
+          onClick={handleLogout}
           className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
         >
           Logout
@@ -94,18 +135,22 @@ export default function AdminDashboard() {
         onSubmit={handleSubmit}
         className="bg-white shadow p-6 rounded-lg mb-10 grid grid-cols-1 md:grid-cols-2 gap-4"
       >
-        {["title", "description", "client", "image", "project_url"].map((field) => (
-          <input
-            key={field}
-            type="text"
-            name={field}
-            value={(formData as any)[field]}
-            onChange={handleChange}
-            placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-            className="border rounded-lg p-3 focus:ring-2 focus:ring-orange-400 outline-none"
-            required
-          />
-        ))}
+        {["title", "description", "client", "image", "project_url"].map(
+          (field) => (
+            <input
+              key={field}
+              type="text"
+              name={field}
+              value={(formData as any)[field]}
+              onChange={handleChange}
+              placeholder={
+                field.charAt(0).toUpperCase() + field.slice(1).replace("_", " ")
+              }
+              className="border rounded-lg p-3 focus:ring-2 focus:ring-orange-400 outline-none"
+              required
+            />
+          )
+        )}
 
         <button
           type="submit"
@@ -153,5 +198,6 @@ export default function AdminDashboard() {
         )}
       </section>
     </main>
+    </AdminGuard>
   );
 }

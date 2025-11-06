@@ -1,19 +1,23 @@
-// src/components/AdminGuard.tsx
 "use client";
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function AdminGuard({ children }: { children: React.ReactNode }) {
-  const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const [isReady, setIsReady] = useState(false);
 
-  useEffect(()=>{
-    fetch("/api/auth/me").then(r=>{
-      if (r.ok) setLoading(false);
-      else router.push("/admin/login");
-    }).catch(()=>router.push("/admin/login"));
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const token = localStorage.getItem("adminToken");
+
+    if (!token) {
+      router.replace("/admin/login");
+    } else {
+      setIsReady(true);
+    }
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (!isReady) return null;
+
   return <>{children}</>;
 }
