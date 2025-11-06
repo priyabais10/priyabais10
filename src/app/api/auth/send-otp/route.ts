@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import otpStore from "@/lib/otpStore"; // ✅ imported here
+import { otpStore } from "@/lib/otpStore";
 
 export async function POST(req: Request) {
   try {
     const { email } = await req.json();
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    otpStore[email] = { otp, expires: Date.now() + 5 * 60 * 1000 };
+    otpStore.set(email, { otp, expires: Date.now() + 5 * 60 * 1000 });
 
     console.log("📨 Sending OTP:", otp, "to", email);
 
